@@ -22,7 +22,7 @@ for i = 1:length(hidden)
         % number of neurons in the first layer should not include bias term
         structure = [n - 1,hidden(i),1];
         nn = nn_init(structure,-range,range);
-        nn = nn_train(nn,Xtrain,ytrain,stepSize,iterTimes);
+        nn = nn_train(nn,Xtrain,ytrain,[stepSize,iterTimes]);
         yprime = nn_predict(nn,Xtest);
         Eout = Eout + sum(yprime ~= ytest)/length(ytest);
     end

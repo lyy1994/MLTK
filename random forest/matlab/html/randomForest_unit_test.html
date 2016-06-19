@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>feed-forward neural network unit test</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-06-19"><meta name="DC.source" content="nn_unit_test.m"><style type="text/css">
+      --><title>Random Forest unit test</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-06-19"><meta name="DC.source" content="randomForest_unit_test.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,69 +66,57 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>feed-forward neural network unit test</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">loading data</a></li><li><a href="#2">preprocessing data</a></li><li><a href="#3">setting hyperparameters</a></li><li><a href="#4">training and predicting using neural network</a></li></ul></div><h2>loading data<a name="1"></a></h2><pre class="codeinput">train = load(<span class="string">'hw4_nnet_train.dat'</span>);
-test = load(<span class="string">'hw4_nnet_test.dat'</span>);
-</pre><h2>preprocessing data<a name="2"></a></h2><pre class="codeinput">[~,n] = size(train);
+  </style></head><body><div class="content"><h1>Random Forest unit test</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Loading Data</a></li><li><a href="#2">Preprocessing Data</a></li><li><a href="#3">Setting Parameters</a></li><li><a href="#4">Training and Predicting using RF</a></li></ul></div><h2>Loading Data<a name="1"></a></h2><pre class="codeinput">train = load(<span class="string">'hw3_train.dat'</span>);
+test = load(<span class="string">'hw3_test.dat'</span>);
+</pre><h2>Preprocessing Data<a name="2"></a></h2><pre class="codeinput">[~,n] = size(train);
 Xtrain = train(:,1:n-1);
 ytrain = train(:,n);
-[~,n] = size(test);
 Xtest = test(:,1:n-1);
 ytest = test(:,n);
-</pre><h2>setting hyperparameters<a name="3"></a></h2><pre class="codeinput">stepSize = 0.1;
-range = 0.1;
-hidden = [1;6;11;16;21];<span class="comment">% number of neurons in the hidden layer</span>
-iterTimes = 50000;
-repeat_times = 10;
-</pre><h2>training and predicting using neural network<a name="4"></a></h2><pre class="codeinput"><span class="keyword">for</span> i = 1:length(hidden)
-    Eout = 0;
-    <span class="keyword">for</span> j = 1:repeat_times
-        <span class="comment">% number of neurons in the first layer should not include bias term</span>
-        structure = [n - 1,hidden(i),1];
-        nn = nn_init(structure,-range,range);
-        nn = nn_train(nn,Xtrain,ytrain,[stepSize,iterTimes]);
-        yprime = nn_predict(nn,Xtest);
-        Eout = Eout + sum(yprime ~= ytest)/length(ytest);
-    <span class="keyword">end</span>
-    Eout = Eout/repeat_times;
-    fprintf(<span class="string">'number of hidden units : %d Eout : %f\n'</span>,hidden(i),Eout);
+</pre><h2>Setting Parameters<a name="3"></a></h2><pre class="codeinput">iterTimes = 10;
+Ein = 0;
+Eout = 0;
+</pre><h2>Training and Predicting using RF<a name="4"></a></h2><pre class="codeinput"><span class="keyword">for</span> i = 1:iterTimes
+    model = randomForest_train(Xtrain,ytrain,300);
+    pred = randomForest_predict(model,Xtrain);
+    Ein = Ein + sum(pred ~= ytrain)/length(ytrain);
+    pred = randomForest_predict(model,Xtest);
+    Eout = Eout + sum(pred ~= ytest)/length(ytest);
 <span class="keyword">end</span>
-</pre><pre class="codeoutput">number of hidden units : 1 Eout : 0.311200
-number of hidden units : 6 Eout : 0.036000
-number of hidden units : 11 Eout : 0.036000
-number of hidden units : 16 Eout : 0.036000
-number of hidden units : 21 Eout : 0.036000
+Ein = Ein/iterTimes;
+Eout = Eout/iterTimes;
+</pre><pre class="codeinput">fprintf(<span class="string">'300*100 Ein:%f\n'</span>,Ein);
+fprintf(<span class="string">'300*100 Eout:%f\n'</span>,Eout);
+</pre><pre class="codeoutput">300*100 Ein:0.030000
+300*100 Eout:0.070900
 </pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
-%% feed-forward neural network unit test
-%% loading data
-train = load('hw4_nnet_train.dat');
-test = load('hw4_nnet_test.dat');
-%% preprocessing data
+%% Random Forest unit test
+%% Loading Data
+train = load('hw3_train.dat');
+test = load('hw3_test.dat');
+%% Preprocessing Data
 [~,n] = size(train);
 Xtrain = train(:,1:n-1);
 ytrain = train(:,n);
-[~,n] = size(test);
 Xtest = test(:,1:n-1);
 ytest = test(:,n);
-%% setting hyperparameters
-stepSize = 0.1;
-range = 0.1;
-hidden = [1;6;11;16;21];% number of neurons in the hidden layer
-iterTimes = 50000;
-repeat_times = 10;
-%% training and predicting using neural network
-for i = 1:length(hidden)
-    Eout = 0;
-    for j = 1:repeat_times
-        % number of neurons in the first layer should not include bias term
-        structure = [n - 1,hidden(i),1];
-        nn = nn_init(structure,-range,range);
-        nn = nn_train(nn,Xtrain,ytrain,[stepSize,iterTimes]);
-        yprime = nn_predict(nn,Xtest);
-        Eout = Eout + sum(yprime ~= ytest)/length(ytest);
-    end
-    Eout = Eout/repeat_times;
-    fprintf('number of hidden units : %d Eout : %f\n',hidden(i),Eout);
+%% Setting Parameters
+iterTimes = 10;
+Ein = 0;
+Eout = 0;
+%% Training and Predicting using RF
+for i = 1:iterTimes
+    model = randomForest_train(Xtrain,ytrain,300);
+    pred = randomForest_predict(model,Xtrain);
+    Ein = Ein + sum(pred ~= ytrain)/length(ytrain);
+    pred = randomForest_predict(model,Xtest);
+    Eout = Eout + sum(pred ~= ytest)/length(ytest);
 end
+Ein = Ein/iterTimes;
+Eout = Eout/iterTimes;
+%%
+fprintf('300*100 Ein:%f\n',Ein);
+fprintf('300*100 Eout:%f\n',Eout);
 ##### SOURCE END #####
 --></body></html>

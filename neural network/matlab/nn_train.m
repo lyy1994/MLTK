@@ -1,12 +1,15 @@
-function [nn] = nn_train(nn,X,y,stepSize,iterTimes)
+function [nn] = nn_train(nn,X,y,hyper_para)
 % parameter :
 %   nn : the neural network model;
 %   X : the training data;
 %   y : the label;
+%   hyper_para : vector consisted of stepSize and iterTimes
 %   stepSize : the step size of gradient descent;
 %   iterTimes : the iterating times of stochastic gradient descent;
 % return :
 %   nn : the trained neural network model;
+stepSize = hyper_para(1);
+iterTimes = hyper_para(2);
 m = length(y);
 depth = length(nn.structure) - 1;
 for i = 1:iterTimes
