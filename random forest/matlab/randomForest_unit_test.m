@@ -23,5 +23,5 @@ end
 Ein = Ein/iterTimes;
 Eout = Eout/iterTimes;
 %%
-fprintf('300*100 Ein:%f\n',Ein);
-fprintf('300*100 Eout:%f\n',Eout);
+fprintf('300*100 Training set error rate : %f\n',Ein);
+fprintf('300*100 Test set error rate : %f\n',Eout);

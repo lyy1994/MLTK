@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Random Forest unit test</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-06-20"><meta name="DC.source" content="randomForest_unit_test.m"><style type="text/css">
+      --><title>K Nearest Neighbors unit test</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-06-20"><meta name="DC.source" content="knn_unit_test.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,57 +66,46 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Random Forest unit test</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Loading Data</a></li><li><a href="#2">Preprocessing Data</a></li><li><a href="#3">Setting Parameters</a></li><li><a href="#4">Training and Predicting using RF</a></li></ul></div><h2>Loading Data<a name="1"></a></h2><pre class="codeinput">train = load(<span class="string">'hw3_train.dat'</span>);
-test = load(<span class="string">'hw3_test.dat'</span>);
+  </style></head><body><div class="content"><h1>K Nearest Neighbors unit test</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Loading Data</a></li><li><a href="#2">Preprocessing Data</a></li><li><a href="#3">Setting hyper parameters</a></li><li><a href="#5">Training and Predicting using knn</a></li></ul></div><h2>Loading Data<a name="1"></a></h2><pre class="codeinput">train = load(<span class="string">'hw4_knn_train.dat'</span>);
+test = load(<span class="string">'hw4_knn_test.dat'</span>);
 </pre><h2>Preprocessing Data<a name="2"></a></h2><pre class="codeinput">[~,n] = size(train);
 Xtrain = train(:,1:n-1);
 ytrain = train(:,n);
 Xtest = test(:,1:n-1);
 ytest = test(:,n);
-</pre><h2>Setting Parameters<a name="3"></a></h2><pre class="codeinput">iterTimes = 10;
-Ein = 0;
-Eout = 0;
-</pre><h2>Training and Predicting using RF<a name="4"></a></h2><pre class="codeinput"><span class="keyword">for</span> i = 1:iterTimes
-    model = randomForest_train(Xtrain,ytrain,300);
-    pred = randomForest_predict(model,Xtrain);
-    Ein = Ein + sum(pred ~= ytrain)/length(ytrain);
-    pred = randomForest_predict(model,Xtest);
-    Eout = Eout + sum(pred ~= ytest)/length(ytest);
-<span class="keyword">end</span>
-Ein = Ein/iterTimes;
-Eout = Eout/iterTimes;
-</pre><pre class="codeinput">fprintf(<span class="string">'300*100 Training set error rate : %f\n'</span>,Ein);
-fprintf(<span class="string">'300*100 Test set error rate : %f\n'</span>,Eout);
-</pre><pre class="codeoutput">300*100 Training set error rate : 0.030000
-300*100 Test set error rate : 0.070500
+</pre><h2>Setting hyper parameters<a name="3"></a></h2><pre class="codeinput">hyper_para.k = 5;
+</pre><p>The following line of code shows that you can use any kind of distance measurement function(implemented by hand) such that you can handle any kinds of data and different distance measurement requirements.</p><pre class="codeinput">hyper_para.distance_measurement = @euclidean_distance;
+</pre><h2>Training and Predicting using knn<a name="5"></a></h2><pre class="codeinput">model = knn_train(Xtrain, ytrain, hyper_para);
+pred = knn_pred(model, Xtest);
+</pre><p>A Hint for calculating error: by implementing different kinds of error measurement function, you can benefit from this.</p><pre class="codeinput">Eout = std_classify_error(ytest, pred);
+fprintf(<span class="string">'5nn error rate : %f\n'</span>,Eout);
+</pre><pre class="codeoutput">5nn error rate : 0.316000
 </pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
-%% Random Forest unit test
+%% K Nearest Neighbors unit test
 %% Loading Data
-train = load('hw3_train.dat');
-test = load('hw3_test.dat');
+train = load('hw4_knn_train.dat');
+test = load('hw4_knn_test.dat');
 %% Preprocessing Data
 [~,n] = size(train);
 Xtrain = train(:,1:n-1);
 ytrain = train(:,n);
 Xtest = test(:,1:n-1);
 ytest = test(:,n);
-%% Setting Parameters
-iterTimes = 10;
-Ein = 0;
-Eout = 0;
-%% Training and Predicting using RF
-for i = 1:iterTimes
-    model = randomForest_train(Xtrain,ytrain,300);
-    pred = randomForest_predict(model,Xtrain);
-    Ein = Ein + sum(pred ~= ytrain)/length(ytrain);
-    pred = randomForest_predict(model,Xtest);
-    Eout = Eout + sum(pred ~= ytest)/length(ytest);
-end
-Ein = Ein/iterTimes;
-Eout = Eout/iterTimes;
+%% Setting hyper parameters
+hyper_para.k = 5;
 %%
-fprintf('300*100 Training set error rate : %f\n',Ein);
-fprintf('300*100 Test set error rate : %f\n',Eout);
+% The following line of code shows that you can use any kind of distance
+% measurement function(implemented by hand) such that you can handle any
+% kinds of data and different distance measurement requirements.
+hyper_para.distance_measurement = @euclidean_distance;
+%% Training and Predicting using knn
+model = knn_train(Xtrain, ytrain, hyper_para);
+pred = knn_pred(model, Xtest);
+%%
+% A Hint for calculating error: by implementing different kinds of error
+% measurement function, you can benefit from this.
+Eout = std_classify_error(ytest, pred);
+fprintf('5nn error rate : %f\n',Eout);
 ##### SOURCE END #####
 --></body></html>

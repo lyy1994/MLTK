@@ -12,9 +12,9 @@ ytest = test(:,n);
 % Without depth limitation
 model = DTree_train(Xtrain,ytrain);
 pred = DTree_predict(model,Xtest);
-fprintf('Eout:%f\n',sum(pred ~= ytest)/length(ytest));
+fprintf('Test set error rate : %f\n',sum(pred ~= ytest)/length(ytest));
 %%
 % With depth limitation
 model = DTree_train(Xtrain,ytrain,3);
 pred = DTree_predict(model,Xtest);
-fprintf('Eout:%f\n',sum(pred ~= ytest)/length(ytest));
+fprintf('Test set error rate : %f\n',sum(pred ~= ytest)/length(ytest));
