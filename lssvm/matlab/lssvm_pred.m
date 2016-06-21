@@ -7,4 +7,4 @@ function [y] = lssvm_pred(model,X)
 % Return :
 %   y : predictions, number of data X 1
 epsilon = 1e-7;
-y = sign(model.kernel(X,model.sv,model.kernel_para) * model.beta + epsilon);
+y = sign(model.kernel(X,model.sv,model.kernel_para) * model.beta - epsilon);
