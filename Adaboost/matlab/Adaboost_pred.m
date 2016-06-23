@@ -1,4 +1,4 @@
-function [y] = Adaboost_predict(model, X)
+function [y] = Adaboost_pred(model, X)
 % Given Adaboost's trained parameters and features, make predictions using
 % Adaboost algorithm.
 

@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Adaboost unit test</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-06-21"><meta name="DC.source" content="Adaboost_unit_test.m"><style type="text/css">
+      --><title>Adaboost unit test</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-06-23"><meta name="DC.source" content="Adaboost_unit_test.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -78,11 +78,11 @@ ytest = test(:,n);
 hyper_para.train = @decision_stump_train;
 hyper_para.pred = @decision_stump_pred;
 </pre><h2>Training and Predicting using Adaboost<a name="4"></a></h2><pre class="codeinput">model = Adaboost_train(Xtrain,ytrain,hyper_para);
-pred = Adaboost_predict(model,Xtrain);
+pred = Adaboost_pred(model,Xtrain);
 fprintf(<span class="string">'Training set 0/1 error rate : %f\n'</span>,sum(pred ~= ytrain)/length(ytrain));
 pred = decision_stump_pred(Xtest,model.parameters(1));
 fprintf(<span class="string">'1st base predictor''s test set 0/1 error rate : %f\n'</span>,sum(pred ~= ytest)/length(ytest));
-pred = Adaboost_predict(model,Xtest);
+pred = Adaboost_pred(model,Xtest);
 fprintf(<span class="string">'Test set 0/1 error rate : %f\n'</span>,sum(pred ~= ytest)/length(ytest));
 </pre><pre class="codeoutput">Training set 0/1 error rate : 0.000000
 1st base predictor's test set 0/1 error rate : 0.290000
@@ -106,11 +106,11 @@ hyper_para.train = @decision_stump_train;
 hyper_para.pred = @decision_stump_pred;
 %% Training and Predicting using Adaboost
 model = Adaboost_train(Xtrain,ytrain,hyper_para);
-pred = Adaboost_predict(model,Xtrain);
+pred = Adaboost_pred(model,Xtrain);
 fprintf('Training set 0/1 error rate : %f\n',sum(pred ~= ytrain)/length(ytrain));
 pred = decision_stump_pred(Xtest,model.parameters(1));
 fprintf('1st base predictor''s test set 0/1 error rate : %f\n',sum(pred ~= ytest)/length(ytest));
-pred = Adaboost_predict(model,Xtest);
+pred = Adaboost_pred(model,Xtest);
 fprintf('Test set 0/1 error rate : %f\n',sum(pred ~= ytest)/length(ytest));
 ##### SOURCE END #####
 --></body></html>

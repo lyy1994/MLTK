@@ -15,9 +15,9 @@ hyper_para.train = @decision_stump_train;
 hyper_para.pred = @decision_stump_pred;
 %% Training and Predicting using Adaboost
 model = Adaboost_train(Xtrain,ytrain,hyper_para);
-pred = Adaboost_predict(model,Xtrain);
+pred = Adaboost_pred(model,Xtrain);
 fprintf('Training set 0/1 error rate : %f\n',sum(pred ~= ytrain)/length(ytrain));
 pred = decision_stump_pred(Xtest,model.parameters(1));
 fprintf('1st base predictor''s test set 0/1 error rate : %f\n',sum(pred ~= ytest)/length(ytest));
-pred = Adaboost_predict(model,Xtest);
+pred = Adaboost_pred(model,Xtest);
 fprintf('Test set 0/1 error rate : %f\n',sum(pred ~= ytest)/length(ytest));
